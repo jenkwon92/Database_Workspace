@@ -1,0 +1,193 @@
+SQL> --FOREIGN KEY 제약조건을 자식테이블에 부여할 경우, 부모는 함부토 데이터를 조작하지 못한다.
+SQL> --시습
+SQL> --실습
+SQL> ALTER TABLE category
+  2  DROP column category_id;
+DROP column category_id
+            *
+ERROR at line 2:
+ORA-12992: cannot drop parent key column 
+
+
+SQL> --외래키 제약조건을 걸어놓으면, 데이터 무결성을 유지하며 안전장치를 마련한다.
+SQL> 
+SQL> --제약조건의 종류
+SQL> --1) UNIQUE
+SQL> --2) NOT NULL
+SQL> --3) PRIMARY KEY
+SQL> --4) CHECK
+SQL> --5) DEFAULT
+SQL> --6) FOREIGN KEY
+SQL> -- PRIMARY KEY를 사람이 직접 넣으면 안됨, 왜? 중복가능성도 있고 수치값이 몇까지 증가했는지 조차 알수없음
+SQL> --사용자들에 의해 증가되므로 예측이 불가
+SQL> --해결책? 시퀀스를 이용한다
+SQL> CREATE SEQUENCE seq_category
+  2  INCREMENT BY 1 --씩 증가
+  3  START WITH 1 --1부터 시작
+  4  ;
+CREATE SEQUENCE seq_category
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  CREATE SEQUENCE seq_category
+  2  INCREMENT BY 1
+  3* START WITH 1
+  4  /
+CREATE SEQUENCE seq_category
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL> CONN SYSTEM/1234
+Connected.
+SQL> GRANT CREATE SEQUENCE TO user0827;
+
+Grant succeeded.
+
+SQL> --유저 변경
+SQL> CONN user0827/1234
+Connected.
+SQL> ed
+Wrote file afiedt.buf
+
+  1* GRANT CREATE SEQUENCE TO user0827
+SQL> --숫자값만을 전담하여 증가시켜주는 객체인 시퀀스 생성
+SQL> CREATE SEQUENCE seq_category
+  2  INCREMENT BY 1
+  3  START WITH 1;
+
+Sequence created.
+
+SQL> --시퀀스호출하여 insert 해보기
+SQL> --기존에 들어간 category 데이터는 시퀀스를 이용하지 않았기때문에 무결정이 깨진데이터이므로 버리다
+SQL> --제약조건을 걸어놓으면 마음대로 category 데이터 지울 수 없음
+SQL> --시퀀스 실습을 product을 대상으로하자
+SQL> CREATE SEQUENCE seq_product
+  2  INCEMENT BY 1
+  3  START WITH 1;
+INCEMENT BY 1
+*
+ERROR at line 2:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> CREATE SEQUENCE seq_product
+  2  INCREMENT BY 1
+  3  START WITH 1;
+
+Sequence created.
+
+SQL> --기존 테스트용으로 넣었던 product의 categody_id 값을 지우자
+SQL> DELETE FROM product;
+
+2 rows deleted.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> --시퀀스를 이용한 데이터 INSERT
+SQL> INSERT INTO product (product_id, category_id, code, product_name, price)
+  2  VALUES (seq_product.nextval, 1, 'JE0007', '스키니청바지', 30000);
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> /
+
+1 row created.
+
+SQL> SELECT product_id, product_name FROM product;
+
+PRODUCT_ID PRODUCT_NAME                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+---------- ----------------------------------------                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+         1 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         2 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         3 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         4 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         5 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         6 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         7 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         8 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+         9 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        10 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        11 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        12 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        13 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        14 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        15 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        16 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        17 스키니청바지                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+17 rows selected.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> spool off
