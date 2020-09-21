@@ -1,0 +1,227 @@
+SQL> --오라클 함수 예제
+SQL> --사원의 입사일을 출력하되 다음과 같은 형식으로
+SQL> --ex>1980-08-23
+SQL> 
+SQL> --입사일이 1980인 사원의 이름, 입사일 출력
+SQL> SELECT ename, hiredate *FROM emp
+  2  WHERE hiredate = sys;
+SELECT ename, hiredate *FROM emp
+                        *
+ERROR at line 1:
+ORA-00936: missing expression 
+
+
+SQL> SELECT ename, hiredate FROM emp
+  2  WHERE to_char(hiredate,'yyyy') = '1980';
+
+ENAME                HIREDATE                                                                                                                                                                           
+-------------------- --------                                                                                                                                                                           
+SMITH                80/12/17                                                                                                                                                                           
+
+SQL> --입사일이 5월인 사원을 출력하세요
+SQL> SELECT ename FROM emp
+  2  WHERE to_char(hiredate,'mm') ='5';
+
+no rows selected
+
+SQL> SELECT ename FROM emp
+  2  WHERE to_char(hiredate,'mm') ='05';
+
+ENAME                                                                                                                                                                                                   
+--------------------                                                                                                                                                                                    
+BLAKE                                                                                                                                                                                                   
+ADAMS                                                                                                                                                                                                   
+
+SQL> SELECT ename,hiredate FROM emp
+  2  WHERE to_char(hiredate,'mm') ='05';
+
+ENAME                HIREDATE                                                                                                                                                                           
+-------------------- --------                                                                                                                                                                           
+BLAKE                81/05/01                                                                                                                                                                           
+ADAMS                87/05/23                                                                                                                                                                           
+
+SQL> --사원번호가 홀수인 사원의 사원번호, 이름을 출력하세요
+SQL> SELECT * FROM emp WHERE ename = 'SMITH';
+
+     EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                 
+---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                 
+      7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                 
+
+SQL> SELECT empno, ename FROM emp
+  2  WHERE mod(empno , 2) = '0';
+
+     EMPNO ENAME                                                                                                                                                                                        
+---------- --------------------                                                                                                                                                                         
+      7566 JONES                                                                                                                                                                                        
+      7654 MARTIN                                                                                                                                                                                       
+      7698 BLAKE                                                                                                                                                                                        
+      7782 CLARK                                                                                                                                                                                        
+      7788 SCOTT                                                                                                                                                                                        
+      7844 TURNER                                                                                                                                                                                       
+      7876 ADAMS                                                                                                                                                                                        
+      7900 JAMES                                                                                                                                                                                        
+      7902 FORD                                                                                                                                                                                         
+      7934 MILLER                                                                                                                                                                                       
+
+10 rows selected.
+
+SQL> SELECT empno, ename FROM emp
+  2  WHERE mod(empno , 2) = '1';
+
+     EMPNO ENAME                                                                                                                                                                                        
+---------- --------------------                                                                                                                                                                         
+      7369 SMITH                                                                                                                                                                                        
+      7499 ALLEN                                                                                                                                                                                        
+      7521 WARD                                                                                                                                                                                         
+      7839 KING                                                                                                                                                                                         
+
+SQL> SELECT empno, ename FROM emp
+  2  WHERE mod(empno , 2) != 0;
+
+     EMPNO ENAME                                                                                                                                                                                        
+---------- --------------------                                                                                                                                                                         
+      7369 SMITH                                                                                                                                                                                        
+      7499 ALLEN                                                                                                                                                                                        
+      7521 WARD                                                                                                                                                                                         
+      7839 KING                                                                                                                                                                                         
+
+SQL> --사원의 이름, 길이 출력
+SQL> SELECT ename,length(ename) FROM emp;
+
+ENAME                LENGTH(ENAME)                                                                                                                                                                      
+-------------------- -------------                                                                                                                                                                      
+SMITH                            5                                                                                                                                                                      
+ALLEN                            5                                                                                                                                                                      
+WARD                             4                                                                                                                                                                      
+JONES                            5                                                                                                                                                                      
+MARTIN                           6                                                                                                                                                                      
+BLAKE                            5                                                                                                                                                                      
+CLARK                            5                                                                                                                                                                      
+SCOTT                            5                                                                                                                                                                      
+KING                             4                                                                                                                                                                      
+TURNER                           6                                                                                                                                                                      
+ADAMS                            5                                                                                                                                                                      
+JAMES                            5                                                                                                                                                                      
+FORD                             4                                                                                                                                                                      
+MILLER                           6                                                                                                                                                                      
+
+14 rows selected.
+
+SQL> --문자관련 함수 이용하면 된다
+SQL> --함수는 DBMS제품마다 틀리므로 SQL과는 달리 공통적으로 사용할 수 없다
+SQL> --즉, mysql, oracle, mssql 등 제품마다 지원되는 함수명이 다르다.
+SQL> --지금은 오라클 함수를 사용하고 있는 것임
+SQL> --사원의 업무와 이름을 아래의 형식으로 출력
+SQL> --ex> CLERK부서의 SMITH
+SQL> --ex> CLERK업무담당 SMITH
+SQL> SELECT job, ename FROM EMP;
+
+JOB                ENAME                                                                                                                                                                                
+------------------ --------------------                                                                                                                                                                 
+CLERK              SMITH                                                                                                                                                                                
+SALESMAN           ALLEN                                                                                                                                                                                
+SALESMAN           WARD                                                                                                                                                                                 
+MANAGER            JONES                                                                                                                                                                                
+SALESMAN           MARTIN                                                                                                                                                                               
+MANAGER            BLAKE                                                                                                                                                                                
+MANAGER            CLARK                                                                                                                                                                                
+ANALYST            SCOTT                                                                                                                                                                                
+PRESIDENT          KING                                                                                                                                                                                 
+SALESMAN           TURNER                                                                                                                                                                               
+CLERK              ADAMS                                                                                                                                                                                
+CLERK              JAMES                                                                                                                                                                                
+ANALYST            FORD                                                                                                                                                                                 
+CLERK              MILLER                                                                                                                                                                               
+
+14 rows selected.
+
+SQL> --문자관련 함수중 CONCAT()이용
+SQL> SELECT CONCAT(job,업무담당, ename) FROM emp;
+SELECT CONCAT(job,업무담당, ename) FROM emp
+       *
+ERROR at line 1:
+ORA-00909: invalid number of arguments 
+
+
+SQL> SELECT CONCAT(CONCAT(job,'업무담당'),ename) FROM emp;
+
+CONCAT(CONCAT(JOB,'업무담당'),ENAME)                                                                                                                                                                    
+--------------------------------------------------------------                                                                                                                                          
+CLERK업무담당SMITH                                                                                                                                                                                      
+SALESMAN업무담당ALLEN                                                                                                                                                                                   
+SALESMAN업무담당WARD                                                                                                                                                                                    
+MANAGER업무담당JONES                                                                                                                                                                                    
+SALESMAN업무담당MARTIN                                                                                                                                                                                  
+MANAGER업무담당BLAKE                                                                                                                                                                                    
+MANAGER업무담당CLARK                                                                                                                                                                                    
+ANALYST업무담당SCOTT                                                                                                                                                                                    
+PRESIDENT업무담당KING                                                                                                                                                                                   
+SALESMAN업무담당TURNER                                                                                                                                                                                  
+CLERK업무담당ADAMS                                                                                                                                                                                      
+CLERK업무담당JAMES                                                                                                                                                                                      
+ANALYST업무담당FORD                                                                                                                                                                                     
+CLERK업무담당MILLER                                                                                                                                                                                     
+
+14 rows selected.
+
+SQL> SELECT CONCAT(CONCAT(job,'업무담당: '),ename) FROM emp;
+
+CONCAT(CONCAT(JOB,'업무담당:'),ENAME)                                                                                                                                                                   
+------------------------------------------------------------------                                                                                                                                      
+CLERK업무담당: SMITH                                                                                                                                                                                    
+SALESMAN업무담당: ALLEN                                                                                                                                                                                 
+SALESMAN업무담당: WARD                                                                                                                                                                                  
+MANAGER업무담당: JONES                                                                                                                                                                                  
+SALESMAN업무담당: MARTIN                                                                                                                                                                                
+MANAGER업무담당: BLAKE                                                                                                                                                                                  
+MANAGER업무담당: CLARK                                                                                                                                                                                  
+ANALYST업무담당: SCOTT                                                                                                                                                                                  
+PRESIDENT업무담당: KING                                                                                                                                                                                 
+SALESMAN업무담당: TURNER                                                                                                                                                                                
+CLERK업무담당: ADAMS                                                                                                                                                                                    
+CLERK업무담당: JAMES                                                                                                                                                                                    
+ANALYST업무담당: FORD                                                                                                                                                                                   
+CLERK업무담당: MILLER                                                                                                                                                                                   
+
+14 rows selected.
+
+SQL> --오늘 날짜 출력
+SQL> SELECT sysdate FROM dual;
+
+SYSDATE                                                                                                                                                                                                 
+--------                                                                                                                                                                                                
+20/09/21                                                                                                                                                                                                
+
+SQL> --to_char를 이용하여 오늘과 같은 월에 입사한 사원의 이름, 입사일 출력
+SQL> SELECT ename, hiredate FROM emp
+  2  WHERE TO_CHAR(hiredate,'mm') = TO_CHAR(SYSDATE,'mm');
+
+ENAME                HIREDATE                                                                                                                                                                           
+-------------------- --------                                                                                                                                                                           
+MARTIN               81/09/28                                                                                                                                                                           
+TURNER               81/09/08                                                                                                                                                                           
+
+SQL> --즉, 9월에 입사한 사원 정보를 출력하는 것임
+SQL> SELECT ename, hiredate FROM emp
+  2  WHERE TO_CHAR(hiredate,'mm') = (SELECT TO_CHAR(SYSDATE,'mm') FROM DUAL);
+
+ENAME                HIREDATE                                                                                                                                                                           
+-------------------- --------                                                                                                                                                                           
+MARTIN               81/09/28                                                                                                                                                                           
+TURNER               81/09/08                                                                                                                                                                           
+
+SQL> SELECT ADD_MONTH(SYSDATE,1) FROM DUAL;
+SELECT ADD_MONTH(SYSDATE,1) FROM DUAL
+       *
+ERROR at line 1:
+ORA-00904: "ADD_MONTH": invalid identifier 
+
+
+SQL> SELECT ADD_MONTHS(SYSDATE,1) FROM DUAL;
+
+ADD_MONT                                                                                                                                                                                                
+--------                                                                                                                                                                                                
+20/10/21                                                                                                                                                                                                
+
+SQL> --ADD_MONTHS(대상날짜, 더할월)
+SQL> spool off
