@@ -1,0 +1,167 @@
+Microsoft Windows [Version 10.0.18363.1082]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\Users\silve>sqlplus sys as sysdba;
+
+SQL*Plus: Release 11.2.0.2.0 Production on 월 10월 12 14:44:37 2020
+
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+
+Enter password:
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL> show users;
+SP2-0158: unknown SHOW option "users"
+SQL> how user;
+SP2-0042: unknown command "how user" - rest of line ignored.
+SQL> show user;
+USER is "SYS"
+SQL> conn system/manager
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> conn system/1234
+Connected.
+SQL> show usersl
+SP2-0158: unknown SHOW option "usersl"
+SQL> show users;
+SP2-0158: unknown SHOW option "users"
+SQL> select username from dba_users;
+
+USERNAME
+------------------------------------------------------------
+SYS
+SYSTEM
+ANONYMOUS
+USER0907
+USER0827
+APEX_PUBLIC_USER
+FLOWS_FILES
+APEX_040000
+OUTLN
+DIP
+ORACLE_OCM
+
+USERNAME
+------------------------------------------------------------
+XS$NULL
+MDSYS
+CTXSYS
+DBSNMP
+XDB
+APPQOSSYS
+HR
+
+18 rows selected.
+
+SQL> conn user0907/1234
+Connected.
+SQL> select table_name from user_tables;
+
+no rows selected
+
+SQL> conn user0827/1234
+Connected.
+SQL> select table_name from user_tables;
+
+TABLE_NAME
+------------------------------------------------------------
+DEPT
+EMP
+ANIMAL
+EMP3
+EMP4
+MEMBER
+BABO
+CATEGORY
+PRODUCT
+
+9 rows selected.
+
+SQL> desc member;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MEMBER_IDX                                NOT NULL NUMBER
+ NAME                                               VARCHAR2(20)
+ AGE                                                NUMBER
+ REGDATE                                            DATE
+ POINT                                              NUMBER
+ GENDER                                             VARCHAR2(4)
+
+SQL> conn user0907;
+Enter password:
+Connected.
+SQL> create table member2(
+  2  member2_id number primary key
+  3  ,first name varchar(20)
+  4  ,lastname varchar(20)
+  5  ,local varchar(20)
+  6  ,msg clob
+  7  ,regdate date default sysdate
+  8  );
+,first name varchar(20)
+            *
+ERROR at line 3:
+ORA-00907: missing right parenthesis
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table member2(
+  2  member2_id number primary key
+  3  ,firstname varchar(20)
+  4  ,lastname varchar(20)
+  5  ,local varchar(20)
+  6  ,msg clob
+  7  ,regdate date default sysdate
+  8* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create sequence seq_member2
+  2  increment by 1
+  3* start with 1
+SQL> /
+create sequence seq_member2
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges
+
+
+SQL> conn system/1234
+Connected.
+SQL> --시퀀스 권한 부여하기
+SQL> grant create sequence to user0907;
+
+Grant succeeded.
+
+SQL> conn user0907/1234;
+Connected.
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create sequence seq_member2
+  2  increment  by 1
+  3* start with 1
+SQL> /
+
+Sequence created.
+
+SQL> show userl
+SP2-0158: unknown SHOW option "userl"
+SQL> show user;
+USER is "USER0907"
+SQL> --개발하다가 tablespace용량 부족한 경우
+SQL> --alter database space0907
+SQL> --datafile 'C:\oraclexe\app\oracle\oradata\XE\space0907.dbf'  resize 20M;
+SQL> --conn system/1234 로 접속해서
+SQL>
