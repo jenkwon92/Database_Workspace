@@ -1,0 +1,73 @@
+SQL> select username from dba_users;
+
+USERNAME                                                                        
+------------------------------------------------------------                    
+SYS                                                                             
+SYSTEM                                                                          
+ANONYMOUS                                                                       
+USER0907                                                                        
+USER0827                                                                        
+APEX_PUBLIC_USER                                                                
+FLOWS_FILES                                                                     
+APEX_040000                                                                     
+OUTLN                                                                           
+DIP                                                                             
+ORACLE_OCM                                                                      
+
+USERNAME                                                                        
+------------------------------------------------------------                    
+XS$NULL                                                                         
+MDSYS                                                                           
+CTXSYS                                                                          
+DBSNMP                                                                          
+XDB                                                                             
+APPQOSSYS                                                                       
+HR                                                                              
+
+18 rows selected.
+
+SQL> --유저 생성하기 DDL
+SQL> SHOW USER;
+USER is "SYSTEM"
+SQL> EDIT
+Wrote file afiedt.buf
+
+  1  CREATE TABLESPACE space1104
+  2  datafile 'C:\oraclexe\app\oracle\oradata\XE\space1104.dbf'
+  3* SIZE 10M
+SQL> /
+
+Tablespace created.
+
+SQL> --유저 생성
+SQL> CREATE USER user1104
+  2  IDENTIFIED BY user1104
+  3  DEFAULT TABLESPACE space1104
+  4  QUOTA UNLIMITED ON space1104;
+
+User created.
+
+SQL> --필요한 권한 부여 DCL
+SQL> GRANT CREATE TABLE, CREATE SEQUENCE, CREATE SESSION TO user1104;
+
+Grant succeeded.
+
+SQL> --유저로 접속시도하고, 테이블 생성하자!
+SQL> ed
+Wrote file afiedt.buf
+
+  1  CREATE TABLE member(
+  2  memeber_id NUMBER PRIMARY KEY
+  3  ,name VARCHAR(20)
+  4  ,age NUMBER
+  5  ,phone VARCHAR(20)
+  6* )
+SQL> /
+
+Table created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> spool off
